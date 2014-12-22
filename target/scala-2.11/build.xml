@@ -1,0 +1,26 @@
+<project name="interpSBT" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+          <target name="default">
+            <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="D:\Java\myProjects\interpSBT:C:/Program Files/Java/jdk1.7.0_71/lib/ant-javafx.jar"/>
+            
+            <fx:application id="interpSBT" name="interpSBT" mainClass="Main"/>
+            <fx:jar destfile="D:\Java\myProjects\interpSBT\target\scala-2.11\interpsbt_2.11.2-1.0\interpsbt_2.11.2-1.0.jar">
+              <fx:application refid="interpSBT"/>
+              <fx:fileset dir="D:\Java\myProjects\interpSBT\target\scala-2.11\classes"/>
+              <fx:resources>
+                <fx:fileset dir="D:\Java\myProjects\interpSBT\target\scala-2.11" includes="lib/*.jar"/>
+              </fx:resources>
+            </fx:jar>
+            
+            
+            <fx:deploy width="800" height="600" embeddedWidth="100%" embeddedHeight="100%" outdir="D:\Java\myProjects\interpSBT\target\scala-2.11\interpsbt_2.11.2-1.0" outfile="interpsbt_2.11.2-1.0" placeholderId="javafx" nativeBundles="none" verbose="false">
+              <fx:application refid="interpSBT"/>
+              <fx:info vendor="Unknown" title="interpSBT" category="" description="" copyright="" license=""></fx:info>
+              <fx:resources>
+                <fx:fileset dir="D:\Java\myProjects\interpSBT\target\scala-2.11\interpsbt_2.11.2-1.0" includes="interpsbt_2.11.2-1.0.jar"/>
+                <fx:fileset dir="D:\Java\myProjects\interpSBT\target\scala-2.11" includes="lib/*.jar"/>
+              </fx:resources>
+              <fx:permissions elevated="false" cacheCertificates="false"/>
+              
+            </fx:deploy>
+          </target>
+        </project>

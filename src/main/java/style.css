@@ -1,0 +1,18 @@
+#lineNumeration .text-area .scroll-bar:vertical {
+    -fx-opacity: 0;
+}
+#lineNumeration{
+    -fx-accent : #EF5350;
+}
+
+.text-area , .text-field {
+    -fx-background-color: #f8f8f8;
+    -fx-background-insets:  0.0;
+    -fx-background-radius: 2.0;
+    -fx-border-width: 0.0;
+    -fx-prompt-text-fill: derive(rgb(47.0, 52.0, 57.0), 50.0%);
+}
+#lineNumeration .text-area {
+    -fx-background-color: linear-gradient(to right, #dadada 0%,#f4f4f4 100%);
+}
+

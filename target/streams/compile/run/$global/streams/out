@@ -1,0 +1,97 @@
+[0m[[0minfo[0m] [0mRunning Main [0m
+[0m[[0minfo[0m] [0mtesting[0m
+[0m[[31merror[0m] [0mjava.lang.ClassNotFoundException: sample.Controller[0m
+[0m[[31merror[0m] [0m/D:/Java/myProjects/interpSBT/target/scala-2.11/classes/sample.fxml:13[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:731)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:780)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:185)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:568)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2356)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2172)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2069)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2830)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2809)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2795)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2782)[0m
+[0m[[31merror[0m] [0m  at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2771)[0m
+[0m[[31merror[0m] [0m  at Main.start(Main.java:11)[0m
+[0m[[31merror[0m] [0m  at com.sun.javafx.application.LauncherImpl$5.run(LauncherImpl.java:319)[0m
+[0m[[31merror[0m] [0m  at com.sun.javafx.application.PlatformImpl$5.run(PlatformImpl.java:219)[0m
+[0m[[31merror[0m] [0m  at com.sun.javafx.application.PlatformImpl$4$1.run(PlatformImpl.java:182)[0m
+[0m[[31merror[0m] [0m  at com.sun.javafx.application.PlatformImpl$4$1.run(PlatformImpl.java:179)[0m
+[0m[[31merror[0m] [0m  at java.security.AccessController.doPrivileged(Native Method)[0m
+[0m[[31merror[0m] [0m  at com.sun.javafx.application.PlatformImpl$4.run(PlatformImpl.java:179)[0m
+[0m[[31merror[0m] [0m  at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:76)[0m
+[0m[[31merror[0m] [0m  at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)[0m
+[0m[[31merror[0m] [0m  at com.sun.glass.ui.win.WinApplication.access$100(WinApplication.java:17)[0m
+[0m[[31merror[0m] [0m  at com.sun.glass.ui.win.WinApplication$3$1.run(WinApplication.java:67)[0m
+[0m[[31merror[0m] [0m  at java.lang.Thread.run(Thread.java:745)[0m
+[0m[[31merror[0m] [0m[0m
+[0m[[31merror[0m] [0mException in Application start method[0m
+[0m[[31merror[0m] [0mException in thread "main" java.lang.RuntimeException: Exception in Application start method[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.LauncherImpl.launchApplication1(LauncherImpl.java:403)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.LauncherImpl.access$000(LauncherImpl.java:47)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.LauncherImpl$1.run(LauncherImpl.java:115)[0m
+[0m[[31merror[0m] [0m	at java.lang.Thread.run(Thread.java:745)[0m
+[0m[[31merror[0m] [0mCaused by: javafx.fxml.LoadException: java.lang.ClassNotFoundException: sample.Controller[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:731)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader$InstanceDeclarationElement.processAttribute(FXMLLoader.java:780)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader$Element.processStartElement(FXMLLoader.java:185)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader$ValueElement.processStartElement(FXMLLoader.java:568)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.processStartElement(FXMLLoader.java:2356)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2172)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2069)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2830)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2809)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2795)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2782)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader.load(FXMLLoader.java:2771)[0m
+[0m[[31merror[0m] [0m	at Main.start(Main.java:11)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.LauncherImpl$5.run(LauncherImpl.java:319)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.PlatformImpl$5.run(PlatformImpl.java:219)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.PlatformImpl$4$1.run(PlatformImpl.java:182)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.PlatformImpl$4$1.run(PlatformImpl.java:179)[0m
+[0m[[31merror[0m] [0m	at java.security.AccessController.doPrivileged(Native Method)[0m
+[0m[[31merror[0m] [0m	at com.sun.javafx.application.PlatformImpl$4.run(PlatformImpl.java:179)[0m
+[0m[[31merror[0m] [0m	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:76)[0m
+[0m[[31merror[0m] [0m	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)[0m
+[0m[[31merror[0m] [0m	at com.sun.glass.ui.win.WinApplication.access$100(WinApplication.java:17)[0m
+[0m[[31merror[0m] [0m	at com.sun.glass.ui.win.WinApplication$3$1.run(WinApplication.java:67)[0m
+[0m[[31merror[0m] [0m	... 1 more[0m
+[0m[[31merror[0m] [0mCaused by: java.lang.ClassNotFoundException: sample.Controller[0m
+[0m[[31merror[0m] [0m	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)[0m
+[0m[[31merror[0m] [0m	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)[0m
+[0m[[31merror[0m] [0m	at java.security.AccessController.doPrivileged(Native Method)[0m
+[0m[[31merror[0m] [0m	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)[0m
+[0m[[31merror[0m] [0m	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)[0m
+[0m[[31merror[0m] [0m	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)[0m
+[0m[[31merror[0m] [0m	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)[0m
+[0m[[31merror[0m] [0m	at javafx.fxml.FXMLLoader$ValueElement.processAttribute(FXMLLoader.java:729)[0m
+[0m[[31merror[0m] [0m	... 23 more[0m
+java.lang.RuntimeException: Nonzero exit code returned from runner: 1
+	at scala.sys.package$.error(package.scala:27)
+	at sbt.BuildCommon$$anonfun$toError$1.apply(Defaults.scala:1874)
+	at sbt.BuildCommon$$anonfun$toError$1.apply(Defaults.scala:1874)
+	at scala.Option.foreach(Option.scala:236)
+	at sbt.BuildCommon$class.toError(Defaults.scala:1874)
+	at sbt.Defaults$.toError(Defaults.scala:35)
+	at sbt.Defaults$$anonfun$runTask$1$$anonfun$apply$36$$anonfun$apply$37.apply(Defaults.scala:707)
+	at sbt.Defaults$$anonfun$runTask$1$$anonfun$apply$36$$anonfun$apply$37.apply(Defaults.scala:705)
+	at scala.Function1$$anonfun$compose$1.apply(Function1.scala:47)
+	at sbt.$tilde$greater$$anonfun$$u2219$1.apply(TypeFunctions.scala:40)
+	at sbt.std.Transform$$anon$4.work(System.scala:63)
+	at sbt.Execute$$anonfun$submit$1$$anonfun$apply$1.apply(Execute.scala:226)
+	at sbt.Execute$$anonfun$submit$1$$anonfun$apply$1.apply(Execute.scala:226)
+	at sbt.ErrorHandling$.wideConvert(ErrorHandling.scala:17)
+	at sbt.Execute.work(Execute.scala:235)
+	at sbt.Execute$$anonfun$submit$1.apply(Execute.scala:226)
+	at sbt.Execute$$anonfun$submit$1.apply(Execute.scala:226)
+	at sbt.ConcurrentRestrictions$$anon$4$$anonfun$1.apply(ConcurrentRestrictions.scala:159)
+	at sbt.CompletionService$$anon$2.call(CompletionService.scala:28)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:471)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:745)
+[0m[[31merror[0m] [0m(compile:[31mrun[0m) Nonzero exit code returned from runner: 1[0m
