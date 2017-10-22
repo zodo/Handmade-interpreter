@@ -25,7 +25,7 @@ class TransitionTable {
     }
   }
 
-  object Integer {
+  object Int {
     var value: Int = 0
 
     def jumpDigit1 = {
@@ -34,12 +34,12 @@ class TransitionTable {
       newState = 57
     }
     def jumpDigit2 = {
-      outArray += new Word(value.toString,Tag.INTEGER)
+      outArray += new Word(value.toString,Tag.Int)
       newState= 0
       value = 0
     }
     def jumpDigit3 = {
-      outArray += new Word(value.toString,Tag.INTEGER)
+      outArray += new Word(value.toString,Tag.Int)
       outArray += new Word(""+ch,ch)
       newState= 0
       value = 0
@@ -68,9 +68,9 @@ class TransitionTable {
     58 -> Id.jumpSymbol1 _,
     -14 -> Id.jumpSymbol2 _,
     -15 -> Id.jumpSymbol3 _,
-    57 -> Integer.jumpDigit1 _,
-    -17 -> Integer.jumpDigit2 _,
-    -18 -> Integer.jumpDigit3 _
+    57 -> Int.jumpDigit1 _,
+    -17 -> Int.jumpDigit2 _,
+    -18 -> Int.jumpDigit3 _
   )
 
 
