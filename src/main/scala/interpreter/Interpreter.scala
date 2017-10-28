@@ -15,6 +15,7 @@ class Interpreter(val p: Parser) {
   private var mainStack = new mutable.Stack[TokenJAV]
   private var caret: Int = 0
   private var inputs = new mutable.ArrayBuffer[String]()
+  private var inputPointer = 0
 
   def forInput(inputs: Seq[String]) {
     this.inputs = mutable.ArrayBuffer(inputs: _*)
@@ -72,7 +73,8 @@ class Interpreter(val p: Parser) {
           case TokenJAV.Op.in => {
             val idName: String = mainStack.pop.`val`
             try {
-              varMap.put(idName, inputs.iterator.next.toInt)
+              varMap.put(idName, inputs(inputPointer).toInt)
+              inputPointer += 1
             }
             catch {
               case e: Exception => {
@@ -132,13 +134,14 @@ class Interpreter(val p: Parser) {
           case TokenJAV.Op.arr => {
             val index: Int = getNumericNext
             val idName: String = mainStack.pop.`val`
-            varMap.put(s"mID: $idName, index: $index", varMap(s"mID: $idName, index: $index"))
+            varMap.put(s"mID: $idName, index: $index", varMap.getOrElse(s"mID: $idName, index: $index", 0))
             mainStack.push(new TKBuild().T(TokenJAV.Op.id).V(s"mID: $idName, index: $index").create)
             caret += 1
           }
         }
       }
     }
+    println(varMap)
     return result.mkString(" ")
   }
 
