@@ -7,7 +7,8 @@ object SimpleFacade {
 
   def run(program: String, input: String): Either[String, String] = {
     try {
-      val lexer: Lexer = new Lexer("ВАРКОНСТ ПРОГРАММА " + program)
+      val preparedProgram = Preprocessor.preprocess(program)
+      val lexer: Lexer = new Lexer("ВАРКОНСТ ПРОГРАММА " + preparedProgram)
       lexer.lexIT
       val parser: Parser = new Parser
       var thatAll = false
