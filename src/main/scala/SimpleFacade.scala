@@ -1,5 +1,5 @@
 import interpreter.Interpreter
-import lexer.{Lexer, Preprocessor, Word}
+import lexer.{Lexer, Word}
 import parser.{Adapter, Parser, S}
 
 import scala.util.control.NonFatal
@@ -11,8 +11,7 @@ object SimpleFacade {
 
   def run(program: String, input: String): Either[String, String] = {
     try {
-      val preparedProgram = Preprocessor.preprocess(program)
-      val lexer: Lexer = new Lexer("ВАРКОНСТ ПРОГРАММА " + preparedProgram)
+      val lexer: Lexer = new Lexer("ВАРКОНСТ ПРОГРАММА " + program)
       lexer.lexIT
       val parser: Parser = new Parser
       var thatAll = false
