@@ -1,3 +1,7 @@
+package parser
+
+import interpreter.TokenJAV
+
 /**
   * Created by noname on 30.11.2014.
   */

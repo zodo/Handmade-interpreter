@@ -1,11 +1,15 @@
+package interpreter
+
 import java.util.Date
+
+import parser.{Parser, TKBuild}
 
 import scala.collection.mutable
 
 /**
   * Created by noname on 07.12.2014.
   */
-class Interpretator(val p: Parser) {
+class Interpreter(val p: Parser) {
   private var varMap = mutable.HashMap[String, Int]()
   private var tokens = p.getTokenString
   private var mainStack = new mutable.Stack[TokenJAV]

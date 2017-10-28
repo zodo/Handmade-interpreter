@@ -1,3 +1,7 @@
+import interpreter.Interpreter
+import lexer.{Lexer, Preprocessor, Word}
+import parser.{Adapter, Parser, S}
+
 import scala.util.control.NonFatal
 
 /**
@@ -22,7 +26,7 @@ object SimpleFacade {
         }
       }
       val rpn = parser.getRPNString
-      val interpretator: Interpretator = new Interpretator(parser)
+      val interpretator: Interpreter = new Interpreter(parser)
       interpretator.forInput(input.split(" "))
       Right(interpretator.getResult)
     } catch {

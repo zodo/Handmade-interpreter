@@ -1,4 +1,12 @@
+package gui
 
+import interpreter.Interpreter
+import lexer.{Lexer, Word}
+import parser.{Adapter, Parser, S}
+
+/**
+  * Created by egor on 28.10.17.
+  */
 object GuiFacade {
   private var RPN: String = null
   private var currentLine: Int = 0
@@ -30,13 +38,13 @@ object GuiFacade {
         }
       }
       RPN = parser.getRPNString
-      val interpretator: Interpretator = new Interpretator(parser)
+      val interpretator: Interpreter = new Interpreter(parser)
       interpretator.forInput(strInput)
       InterpResult = interpretator.getResult
     }
     catch {
       case e: Exception =>
-        e.printStackTrace()
+//        e.printStackTrace()
         System.out.println(e.toString)
         ErrorText = e.getMessage
     }

@@ -1,3 +1,5 @@
+package lexer
+
 /**
  * Created by Ognelis on 21.11.14.
  */

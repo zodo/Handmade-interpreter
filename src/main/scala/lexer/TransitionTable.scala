@@ -1,3 +1,5 @@
+package lexer
+
 import scala.collection.mutable.ArrayBuffer
 /**
  * Created by Ognelis on 15.12.14.

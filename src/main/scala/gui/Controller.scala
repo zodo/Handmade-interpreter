@@ -1,10 +1,10 @@
-import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
-import javafx.fxml.{FXML, Initializable}
-import javafx.scene.control.Label
-import javafx.scene.control.TextArea
+package gui
+
 import java.net.URL
 import java.util.ResourceBundle
+import javafx.beans.value.{ChangeListener, ObservableValue}
+import javafx.fxml.{FXML, Initializable}
+import javafx.scene.control.{Label, TextArea}
 
 class Controller extends Initializable {
   @FXML
