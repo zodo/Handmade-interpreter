@@ -13,7 +13,7 @@ object Tag {
   val OUTPUT: Int   = 264  // ВЫВОД
   val INPUT: Int    = 265  // ВВОД
   val ID:  Int      = 286  // ID
-  val INTEGER: Int  = 287  // ЧИСЛО
+  val Int: Int  = 287  // ЧИСЛО
   val WHITE_SPACE   = 288
   val END_PROGRAMM  = 289
 }
