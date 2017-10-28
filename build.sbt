@@ -1,13 +1,7 @@
-name := "interpSBT"
+name := "Handmade-Interpreter"
 
 version := "1.0"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.12.4"
 
-javacOptions ++= Seq("-encoding", "UTF-8")
 
-jfxSettings
-
-JFX.addJfxrtToClasspath := true
-
-JFX.mainClass := Some("Main")
