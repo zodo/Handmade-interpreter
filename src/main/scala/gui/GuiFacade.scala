@@ -1,13 +1,12 @@
 package gui
 
-import interpreter.Interpreter
-import lexer.{Lexer, Word}
-import parser.{Adapter, Parser, S}
+import app.ComponentRegistry
+import parser.{Adapter, S}
 
 /**
   * Created by egor on 28.10.17.
   */
-object GuiFacade {
+object GuiFacade extends ComponentRegistry {
   private var RPN: String = null
   private var currentLine: Int = 0
   private var currentSymbol: Int = 0
@@ -20,14 +19,16 @@ object GuiFacade {
     currentLine = 0
     val strInput = input.split(" ")
     try {
-      val lexer: Lexer = new Lexer("ВАРКОНСТ ПРОГРАММА " + text)
-      lexer.lexIT
-      val parser: Parser = new Parser
+      val lexer = getLexer
+      val parser = getParser
+      val interpreter = getInterpreter
+
+      lexer.lexIT("ВАРКОНСТ ПРОГРАММА " + text)
       System.out.println("**************")
       var thatAll = false
       while (!thatAll) {
         {
-          val lexema: Word = lexer.getNext
+          val lexema = lexer.getNext
           parser.parse(Adapter.Adapt(lexema.tag), lexema.lexeme)
           currentLine = lexer.getLine
           currentSymbol = lexer.getLine
@@ -38,9 +39,7 @@ object GuiFacade {
         }
       }
       RPN = parser.getRPNString
-      val interpretator: Interpreter = new Interpreter(parser)
-      interpretator.forInput(strInput)
-      InterpResult = interpretator.getResult
+      InterpResult = interpreter.getResult(parser.getTokenString, strInput)
     }
     catch {
       case e: Exception =>

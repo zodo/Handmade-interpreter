@@ -1,9 +1,13 @@
 package lexer
 
-/**
- * Created by Ognelis on 18.12.14.
- */
-class Lexer(val TEXT: String) {
+trait LexerComponent {
+  def getLexer: Lexer
+
+  /**
+    * Created by Ognelis on 18.12.14.
+    */
+  class Lexer {
+
     var symbol: Char = ' '
     var state: Int = 0
     val tTable = new TransitionTable
@@ -17,8 +21,8 @@ class Lexer(val TEXT: String) {
     def getLine: Int = counterLines
     def getSymbol: Int = counterSymbol
 
-    def lexIT = {
-      for (symbol <- TEXT) {
+    def lexIT(text: String) = {
+      for (symbol <- text) {
         counterSymbol+=1
         symbol match {
           case _ if (symbol == '\n') => {
@@ -53,4 +57,5 @@ class Lexer(val TEXT: String) {
       tTable.outArray += new Word("КОНЕЦ", Tag.END_PROGRAMM)
       iter = tTable.outArray.toIterator
     }
+  }
 }
