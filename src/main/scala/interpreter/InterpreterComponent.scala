@@ -2,8 +2,6 @@ package interpreter
 
 import java.util.Date
 
-import parser.TKBuild
-
 import scala.collection.mutable
 
 
@@ -28,140 +26,112 @@ trait InterpreterComponent {
         {
           //        if (new Date().getTime > maxTimeForProcess) throw new Exception("Алгоритм работал дольше секунды")
           val currentToken: TokenJAV = tokens(caret)
-          currentToken.`type` match {
-            case TokenJAV.Op.num => {
+          currentToken match {
+            case TokenJAV.num(_) =>
               mainStack.push(currentToken)
               caret += 1
-            }
-            case TokenJAV.Op.id => {
+            case TokenJAV.id(_) =>
               mainStack.push(currentToken)
               caret += 1
-            }
-            case TokenJAV.Op.plus => {
+            case TokenJAV.plus =>
               val a: Int = getNumericNext
               val b: Int = getNumericNext
               val sum: Int = b + a
-              mainStack.push(new TKBuild().T(TokenJAV.Op.num).V(sum.toString).create)
+              mainStack.push(TokenJAV.num(sum))
               caret += 1
-            }
-            case TokenJAV.Op.minus => {
+            case TokenJAV.minus =>
               val a: Int = getNumericNext
               val b: Int = getNumericNext
               val raznost: Int = b - a
-              mainStack.push(new TKBuild().T(TokenJAV.Op.num).V(raznost.toString).create)
+              mainStack.push(TokenJAV.num(raznost))
               caret += 1
-            }
-            case TokenJAV.Op.jump => {
-              caret = mainStack.pop.`val`.toInt
-            }
-            case TokenJAV.Op.jumpFalse => {
-              val newCaret: Int = mainStack.pop.`val`.toInt
-              val condition: Int = mainStack.pop.`val`.toInt
+            case TokenJAV.jump =>
+              val maybeLbl = mainStack.pop.asInstanceOf[TokenJAV.lbl]
+              caret = maybeLbl.value
+            case TokenJAV.jumpFalse =>
+              val newCaret: Int = mainStack.pop.asInstanceOf[TokenJAV.lbl].value
+              val condition: Int = mainStack.pop.asInstanceOf[TokenJAV.num].value
               if (condition == 0) caret = newCaret
               else if (condition == 1) {
-                caret += 1;
-                caret - 1
+                caret += 1
+                //                caret - 1
               }
               else {
                 throw new Exception("Hе правильное условие")
               }
-            }
-            case TokenJAV.Op.lbl => {
+            case TokenJAV.lbl(_) =>
               mainStack.push(currentToken)
               caret += 1
-            }
-            case TokenJAV.Op.in => {
-              val idName: String = mainStack.pop.`val`
+            case TokenJAV.in =>
+              val idName: String = mainStack.pop.asInstanceOf[TokenJAV.id].value
               try {
                 varMap.put(idName, inputs(inputPointer).toInt)
                 inputPointer += 1
               }
               catch {
-                case e: Exception => {
+                case e: Exception =>
                   throw new Exception("Ожидается ввод")
-                }
               }
               caret += 1
-            }
-            case TokenJAV.Op.out => {
+            case TokenJAV.out =>
               result.append(getNumericNext.toString)
               caret += 1
-            }
-            case TokenJAV.Op.mult => {
-              val a: Int = getNumericNext
-              val b: Int = getNumericNext
+            case TokenJAV.mult =>
+              val a = getNumericNext
+              val b = getNumericNext
               val mult: Int = a * b
-              mainStack.push(new TKBuild().T(TokenJAV.Op.num).V(mult.toString).create)
+              mainStack.push(TokenJAV.num(mult))
               caret += 1
-            }
-            case TokenJAV.Op.div => {
-              val a: Int = getNumericNext
-              val b: Int = getNumericNext
+            case TokenJAV.div =>
+              val a = getNumericNext
+              val b = getNumericNext
               if (a == 0) {
                 throw new Exception("Деление на ноль")
               }
               val div: Int = b / a
-              mainStack.push(new TKBuild().T(TokenJAV.Op.num).V(div.toString).create)
+              mainStack.push(TokenJAV.num(div))
               caret += 1
-            }
-            case TokenJAV.Op.more => {
-              val a: Int = getNumericNext
-              val b: Int = getNumericNext
-              if (b > a) mainStack.push(new TKBuild().T(TokenJAV.Op.num).V("1").create)
-              else mainStack.push(new TKBuild().T(TokenJAV.Op.num).V("0").create)
+            case TokenJAV.more =>
+              val a = getNumericNext
+              val b = getNumericNext
+              if (b > a) mainStack.push(TokenJAV.num.trueValue)
+              else mainStack.push(TokenJAV.num.falseValue)
               caret += 1
-            }
-            case TokenJAV.Op.less => {
-              val a: Int = getNumericNext
-              val b: Int = getNumericNext
-              if (b < a) mainStack.push(new TKBuild().T(TokenJAV.Op.num).V("1").create)
-              else mainStack.push(new TKBuild().T(TokenJAV.Op.num).V("0").create)
+            case TokenJAV.less =>
+              val a = getNumericNext
+              val b = getNumericNext
+              if (b < a) mainStack.push(TokenJAV.num.trueValue)
+              else mainStack.push(TokenJAV.num.falseValue)
               caret += 1
-            }
-            case TokenJAV.Op.eq => {
-              val a: Int = getNumericNext
-              val b: Int = getNumericNext
-              if (a == b) mainStack.push(new TKBuild().T(TokenJAV.Op.num).V("1").create)
-              else mainStack.push(new TKBuild().T(TokenJAV.Op.num).V("0").create)
+            case TokenJAV.eq =>
+              val a = getNumericNext
+              val b = getNumericNext
+              if (a == b) mainStack.push(TokenJAV.num.trueValue)
+              else mainStack.push(TokenJAV.num.falseValue)
               caret += 1
-            }
-            case TokenJAV.Op.ravno => {
-              val left: Int = getNumericNext
-              val idName: String = mainStack.pop.`val`
+            case TokenJAV.ravno =>
+              val left = getNumericNext
+              val idName = mainStack.pop.asInstanceOf[TokenJAV.id].value
               varMap.put(idName, left)
               caret += 1
-            }
-            case TokenJAV.Op.arr => {
-              val index: Int = getNumericNext
-              val idName: String = mainStack.pop.`val`
+            case TokenJAV.arr =>
+              val index = getNumericNext
+              val idName = mainStack.pop.asInstanceOf[TokenJAV.id].value
               varMap.put(s"mID: $idName, index: $index", varMap.getOrElse(s"mID: $idName, index: $index", 0))
-              mainStack.push(new TKBuild().T(TokenJAV.Op.id).V(s"mID: $idName, index: $index").create)
+              mainStack.push(TokenJAV.id(s"mID: $idName, index: $index"))
               caret += 1
-            }
           }
         }
       }
       println(varMap)
-      return result.mkString(" ")
+      result.mkString(" ")
     }
 
-    private def getNumericNext: Int = {
-      var result: Int = 0
-      if (mainStack.top.`type` == TokenJAV.Op.id) {
-        try {
-          result = varMap(mainStack.pop.`val`)
-        }
-        catch {
-          case e: Exception => {
-            throw new Exception("Использование неинициализированной переменной")
-          }
-        }
-      }
-      else if (mainStack.top.`type` == TokenJAV.Op.num) {
-        result = mainStack.pop.`val`.toInt
-      }
-      else throw new Exception("Невозможно получить численное значение")
-      return result
+    private def getNumericNext = mainStack.pop match {
+      case TokenJAV.id(value) => varMap.getOrElse(value, throw new Exception("Использование неинициализированной переменной"))
+      case TokenJAV.num(value) => value
+      case _ => throw new Exception("Невозможно получить численное значение")
     }
   }
+
 }

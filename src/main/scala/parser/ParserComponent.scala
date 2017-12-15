@@ -116,52 +116,52 @@ trait ParserComponent {
       shop.push(S.N)
 
       private def getStrFromInt(symbol: Int): String = {
-        if (symbol >= 200) return ""
-        symbol match {
+        if (symbol >= 200) ""
+        else symbol match {
           case S.NUMBER =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.num).V(TokenValues.top).create)
+            TKSadd(TokenJAV.num(TokenValues.top.toInt))
             TokenValues.pop
           case S.PLUS =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.plus).create)
+            TKSadd(TokenJAV.plus)
             "+"
           case S.MINUS =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.minus).create)
+            TKSadd(TokenJAV.minus)
             "-"
           case S.MULT =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.mult).create)
+            TKSadd(TokenJAV.mult)
             "*"
           case S.DIV =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.div).create)
+            TKSadd(TokenJAV.div)
             "/"
           case S.ID =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.id).V(TokenValues.top).create)
+            TKSadd(TokenJAV.id(TokenValues.top))
             TokenValues.pop
           case S.EQ =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.ravno).create)
+            TKSadd(TokenJAV.ravno)
             ":="
           case S.DOT =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.arr).create)
+            TKSadd(TokenJAV.arr)
             "<i>"
           case S.MLE =>
             if (compOperator == ">") {
-              TKSadd(new TKBuild().T(TokenJAV.Op.more).create)
+              TKSadd(TokenJAV.more)
               ">"
             }
             else if (compOperator == "<") {
-              TKSadd(new TKBuild().T(TokenJAV.Op.less).create)
+              TKSadd(TokenJAV.less)
               "<"
             }
             else {
-              TKSadd(new TKBuild().T(TokenJAV.Op.eq).create)
+              TKSadd(TokenJAV.eq)
               "=="
             }
           case S.P =>
             ""
           case S.VIVOD =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.out).create)
+            TKSadd(TokenJAV.out)
             "<OUT>"
           case S.VVOD =>
-            TKSadd(new TKBuild().T(TokenJAV.Op.in).create)
+            TKSadd(TokenJAV.in)
             "<IN>"
           case s =>
             s.toString
@@ -172,25 +172,25 @@ trait ParserComponent {
         LBLshop.push(count)
         addToRPN("pystP1")
         addToRPN("<jf>")
-        TKSadd(new TKBuild().T(TokenJAV.Op.lbl).create)
-        TKSadd(new TKBuild().T(TokenJAV.Op.jumpFalse).create)
+        TKSadd(TokenJAV.incompleteLbl)
+        TKSadd(TokenJAV.jumpFalse)
       }
 
       private def P2() {
         val m: String = "<m" + (count + 2) + ">"
-        tokenString(LBLshop.top).`val` = String.valueOf(count + 2)
+        tokenString.update(LBLshop.top, TokenJAV.lbl(count + 2))
         string.update(LBLshop.pop, m)
         LBLshop.push(count)
         addToRPN("pystP2")
         addToRPN("<j>")
-        TKSadd(new TKBuild().T(TokenJAV.Op.lbl).create)
-        TKSadd(new TKBuild().T(TokenJAV.Op.jump).create)
+        TKSadd(TokenJAV.incompleteLbl)
+        TKSadd(TokenJAV.jump)
       }
 
       private def P3() {
-        val m: String = "<m" + (count) + ">"
+        val m: String = "<m" + count + ">"
         string.update(LBLshop.top, m)
-        tokenString(LBLshop.pop).`val` = String.valueOf(count)
+        tokenString.update(LBLshop.pop, TokenJAV.lbl(count))
       }
 
       private def P4() {
@@ -200,11 +200,11 @@ trait ParserComponent {
       private def P5() {
         val m: String = "<m" + (count + 2) + ">"
         string.update(LBLshop.top, m)
-        tokenString(LBLshop.pop).`val` = String.valueOf(count + 2)
+        tokenString.update(LBLshop.pop, TokenJAV.lbl(count + 2))
         addToRPN("<m" + LBLshop.top + ">")
         addToRPN("<j>")
-        TKSadd(new TKBuild().T(TokenJAV.Op.lbl).V(String.valueOf(LBLshop.pop)).create)
-        TKSadd(new TKBuild().T(TokenJAV.Op.jump).create)
+        TKSadd(TokenJAV.lbl(LBLshop.pop))
+        TKSadd(TokenJAV.jump)
       }
 
       private def addToRPN(s: String) {
@@ -270,4 +270,5 @@ trait ParserComponent {
     }
 
   }
+
 }
