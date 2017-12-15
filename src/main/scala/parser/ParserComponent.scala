@@ -137,7 +137,7 @@ trait ParserComponent {
             TKSadd(TokenJAV.id(TokenValues.top))
             TokenValues.pop
           case S.EQ =>
-            TKSadd(TokenJAV.ravno)
+            TKSadd(TokenJAV.assign)
             ":="
           case S.DOT =>
             TKSadd(TokenJAV.arr)
@@ -152,7 +152,7 @@ trait ParserComponent {
               "<"
             }
             else {
-              TKSadd(TokenJAV.eq)
+              TKSadd(TokenJAV.isEq)
               "=="
             }
           case S.P =>
