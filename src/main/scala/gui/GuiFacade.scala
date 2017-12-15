@@ -49,22 +49,9 @@ object GuiFacade extends ComponentRegistry {
     }
   }
 
-  def getErrors: String = {
-    return ErrorText
-  }
+  def getErrors = Option(ErrorText).map((_, currentLine + 1))
 
-  def getInterpResult: String = {
-    return InterpResult
-  }
+  def getInterpResult = Option(InterpResult)
 
-  def getRPN: String = {
-    return RPN
-  }
-
-  def getLineWithError: Int = {
-    if (ErrorText == null) {
-      return -1
-    }
-    return currentLine + 1
-  }
+  def getRPN = Option(RPN)
 }

@@ -19,7 +19,7 @@ class Controller extends Initializable {
   var inputArea: TextArea = _
 
   override def initialize(url: URL, resourceBundle: ResourceBundle) {
-    //lineNumeration.setWrapText(true);
+    lineNumeration.setWrapText(true)
     inputArea.textProperty.addListener(new ChangeListener[String]() {
       def changed(observableValue: ObservableValue[_ <: String], s: String, s2: String) {
         codeAreaChanged()
@@ -39,49 +39,44 @@ class Controller extends Initializable {
   }
 
   private def codeAreaChanged() {
-    lineNumeration.clear()
-    resultArea.clear()
-    var i: Int = 0
-    while (i < codeArea.getText.split("\n").length) {
-      {
-        lineNumeration.textProperty.setValue(
-          s"""${lineNumeration.getText}${ i + 1 }
-             |
-           """.stripMargin)
-      }
-      {
-        i += 1; i - 1
-      }
-    }
-    lineNumeration.setScrollTop(codeArea.getScrollTop)
-    lineNumeration.setScrollLeft(0.0)
-    GuiFacade.parseText(codeArea.getText, inputArea.getText)
-    if (GuiFacade.getErrors == null) {
-      statusBar.setText("Состояние: Без ошибок")
-    }
-    else {
-      statusBar.setText(s"Состояние: ${GuiFacade.getErrors} в строке ${GuiFacade.getLineWithError}")
-      ErrorInLine(GuiFacade.getLineWithError)
-    }
-    if (GuiFacade.getRPN != null) {
-      if (GuiFacade.getInterpResult != null) {
-        resultArea.setText(String.format("Преобразованная программа : %s\n\nВывод интерпретатора : %s", GuiFacade.getRPN, GuiFacade.getInterpResult))
-      }
-      else resultArea.setText(String.format("Преобразованная программа : %s", GuiFacade.getRPN))
-    }
-  }
 
-  private def ErrorInLine(n: Int) {
-    var lengthBefore: Int = 0
-    var i: Int = 1
-    while (i < n) {
-      {
-        lengthBefore += i.toString.length + 1
+    def prepareArea = {
+      val numberOfLines = codeArea.getText.count(_ == '\n')
+      val lineNumbersString = 1.to(numberOfLines + 1).mkString("\n")
+
+      lineNumeration.clear()
+      lineNumeration.textProperty().setValue(lineNumbersString)
+      lineNumeration.setScrollTop(codeArea.getScrollTop)
+      lineNumeration.setScrollLeft(0.0)
+
+      resultArea.clear()
+    }
+
+    def printErrors = {
+      def selectLineNumber(n: Int) = {
+        val lengthBefore = 1.to(n + 1).mkString(" ").length
+        lineNumeration.selectRange(lengthBefore, lengthBefore + 1 + n.toString.length)
       }
-      {
-        i += 1; i - 1
+
+      GuiFacade.getErrors match {
+        case None =>
+          statusBar.setText("Состояние: Без ошибок")
+        case Some((error, lineNumber)) =>
+          statusBar.setText(s"Состояние: $error в строке $lineNumber")
+          selectLineNumber(lineNumber)
       }
     }
-    lineNumeration.selectRange(lengthBefore, lengthBefore + 1 + n.toString.length)
+
+    def printResults = {
+      for {
+        rpn <- GuiFacade.getRPN
+        result <- GuiFacade.getInterpResult
+      } yield resultArea.setText(s"Преобразованная программа : $rpn\n\nВывод интерпретатора : $result")
+    }
+
+    prepareArea
+    GuiFacade.parseText(codeArea.getText, inputArea.getText)
+    printErrors
+    printResults
   }
 }
