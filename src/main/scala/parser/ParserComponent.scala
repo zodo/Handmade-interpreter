@@ -12,17 +12,7 @@ trait ParserComponent {
     * Created by noname on 23.11.2014.
     */
   object Parser {
-    def isNumeric(str: String): Boolean = {
-      try {
-        val i: Int = str.toInt
-      }
-      catch {
-        case _: NumberFormatException => {
-          return false
-        }
-      }
-      true
-    }
+    def isNumeric(str: String) = str.matches("-?\\d+")
   }
 
   class Parser {
