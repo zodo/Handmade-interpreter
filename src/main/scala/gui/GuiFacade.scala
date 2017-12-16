@@ -1,7 +1,7 @@
 package gui
 
 import app.ComponentRegistry
-import parser.{Adapter, S}
+import parser.symbols.{Symbol, Terminal}
 
 /**
   * Created by egor on 28.10.17.
@@ -29,11 +29,11 @@ object GuiFacade extends ComponentRegistry {
       while (!thatAll) {
         {
           val lexema = lexer.getNext
-          parser.parse(Adapter.Adapt(lexema.tag), lexema.lexeme)
+          parser.parse(Terminal.getTerminalByLexerValue(lexema.tag), lexema.lexeme)
           currentLine = lexer.getLine
           currentSymbol = lexer.getLine
-          System.out.println("lexema: " + S.getSymbolName(Adapter.Adapt(lexema.tag)) + " val: " + lexema.lexeme)
-          if (Adapter.Adapt(lexema.tag) == S.THEEND) {
+          System.out.println("lexema: " + Terminal.getTerminalByLexerValue(lexema.tag).name + " val: " + lexema.lexeme)
+          if (Terminal.getTerminalByLexerValue(lexema.tag) == Terminal.TheEnd) {
             thatAll = true
           }
         }

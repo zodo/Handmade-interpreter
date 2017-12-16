@@ -1,6 +1,6 @@
 package app
 
-import parser.{Adapter, S}
+import parser.symbols.Terminal
 
 import scala.util.control.NonFatal
 
@@ -10,7 +10,7 @@ import scala.util.control.NonFatal
 object SimpleFacade extends ComponentRegistry {
 
   def run(program: String, input: String): Either[String, String] = {
-    try {
+    {
       val lexer = getLexer
       val parser = getParser
       val interpreter = getInterpreter
@@ -20,15 +20,13 @@ object SimpleFacade extends ComponentRegistry {
       while (!thatAll) {
         {
           val lexema = lexer.getNext
-          parser.parse(Adapter.Adapt(lexema.tag), lexema.lexeme)
-          if (Adapter.Adapt(lexema.tag) == S.THEEND) {
+          parser.parse(Terminal.getTerminalByLexerValue(lexema.tag), lexema.lexeme)
+          if (Terminal.getTerminalByLexerValue(lexema.tag) == Terminal.TheEnd) {
             thatAll = true
           }
         }
       }
       Right(interpreter.getResult(parser.getTokenString, input.split(" ")))
-    } catch {
-      case NonFatal(e) => Left(e.getMessage)
     }
   }
 }

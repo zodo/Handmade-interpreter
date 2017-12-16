@@ -1,6 +1,10 @@
 package parser
 
 import interpreter.TokenJAV
+import parser.symbols.{Symbol, Terminal, NonTerminal, Special}
+import Terminal._
+import NonTerminal._
+import Special._
 
 import scala.collection.mutable
 
@@ -13,14 +17,16 @@ trait ParserComponent {
     */
   object Parser {
     def isNumeric(str: String) = str.matches("-?\\d+")
+
+    def reportInvalidState = throw new Exception("Некорректное состояние парсера")
   }
 
   class Parser {
-    private var shop = new mutable.Stack[Int]
+    private var shop = new mutable.Stack[Symbol]
     private var workIsDone: Boolean = false
     private var RPN: Parser#RPNhandler = new RPNhandler
-    shop.push(S.THEEND)
-    shop.push(S.PROGRAM)
+    shop.push(TheEnd)
+    shop.push(Program)
 
     def getRPNString: String = {
       RPN.getStr
@@ -42,48 +48,41 @@ trait ParserComponent {
       RPN.masMap.toMap
     }
 
-    def parse(term: Int, value: String): Boolean = {
-      //        if (workIsDone) return true;
-      if (term == S.NUMBER && !Parser.isNumeric(value)) throw new Exception("Не правильное значение числа")
-      if (term == S.ID && (value == "" || Character.isDigit(value.charAt(0)))) throw new Exception("Не правильное значение ID")
+    def parse(term: Terminal, value: String): Boolean = {
+      term match {
+        case Number if !Parser.isNumeric(value) => throw new Exception("Не правильное значение числа")
+        case Id if value == "" || Character.isDigit(value.charAt(0)) => throw new Exception("Неправильное значение ID")
+        case _ => // ignore
+      }
+
       RPN.pushValue(value)
       var shouldBreak = false
+
       while (!shouldBreak) {
-        {
-          if ((shop.top == S.THEEND) && (term == S.THEEND)) {
-            shop.pop
+        shop.pop match {
+          case TheEnd if term == TheEnd =>
             RPN.goOut()
             workIsDone = true
             shouldBreak = true
-          } else if (shop.top < 100) //Нетерминал
-          {
-            var zamena = table.getMove(shop.top, term)
-            if (zamena == null) throw new Exception("Hет перехода в \"" + S.getSymbolName(term) + "\" из \"" + S.getSymbolName(shop.top) + "\"")
-            var RPNzamena = table.getRPNmove(shop.top, term)
-            zamena = zamena.reverse
-            shop.pop
-            var lambda: Boolean = false
-            for (i <- zamena) if (i != S.LAM) {
-              shop.push(i)
-            }
-            else {
-              lambda = true
-            }
-            RPNzamena = RPNzamena.reverse
+          case P => RPN.goOut()
+          case s: NonTerminal =>
+            val zamena = s.getMove(term).reverse
+            if (zamena.isEmpty) throw new Exception("Hет перехода в \"" + term.name + "\" из \"" + s.name + "\"")
+
+            val RPNzamena = s.getRpnMove(term).reverse
+
+            shop.pushAll(zamena.filter(_ != Lam))
             RPN.goOut()
-            for (i <- RPNzamena) if (!lambda) RPN.push(i)
-          }
-          else //Терминал
-          {
-            if (term == shop.top) {
-              shop.pop
+
+            if (!zamena.contains(Lam)) RPN.pushAll(RPNzamena)
+          case s: Terminal =>
+            if (term == s) {
               RPN.goOut()
               shouldBreak = true
             }
             else {
-              throw new Exception("Hа входе \"" + S.getSymbolName(term) + "\",ожидался \"" + S.getSymbolName(shop.top) + "\". ")
+              throw new Exception("Hа входе \"" + term.name + "\",ожидался \"" + s.name + "\". ")
             }
-          }
         }
       }
       workIsDone
@@ -93,7 +92,7 @@ trait ParserComponent {
 
       var count: Int = 0
       var compOperator: String = ""
-      var shop = new mutable.Stack[Int]
+      var shop = new mutable.Stack[Symbol]
       var LBLshop = new mutable.Stack[Int]
       var TokenValues = new mutable.Stack[String]
       var string = new mutable.ArrayBuffer[String]
@@ -102,99 +101,57 @@ trait ParserComponent {
       var constMap = new mutable.HashMap[String, Int]
       var masMap = new mutable.HashMap[String, mutable.Seq[Int]]
 
-      shop.push(S.N)
-      shop.push(S.N)
+      shop.push(N)
+      shop.push(N)
 
-      private def getStrFromInt(symbol: Int): String = {
-        if (symbol >= 200) ""
-        else symbol match {
-          case S.NUMBER =>
-            TKSadd(TokenJAV.num(TokenValues.top.toInt))
-            TokenValues.pop
-          case S.PLUS =>
-            TKSadd(TokenJAV.plus)
-            "+"
-          case S.MINUS =>
-            TKSadd(TokenJAV.minus)
-            "-"
-          case S.MULT =>
-            TKSadd(TokenJAV.mult)
-            "*"
-          case S.DIV =>
-            TKSadd(TokenJAV.div)
-            "/"
-          case S.ID =>
-            TKSadd(TokenJAV.id(TokenValues.top))
-            TokenValues.pop
-          case S.EQ =>
-            TKSadd(TokenJAV.assign)
-            ":="
-          case S.DOT =>
-            TKSadd(TokenJAV.arr)
-            "<i>"
-          case S.MLE =>
-            if (compOperator == ">") {
+      private def getStrFromS(symbol: Symbol): String = symbol match {
+        case Number =>
+          TKSadd(TokenJAV.num(TokenValues.top.toInt))
+          TokenValues.pop
+        case Plus =>
+          TKSadd(TokenJAV.plus)
+          "+"
+        case Minus =>
+          TKSadd(TokenJAV.minus)
+          "-"
+        case Mult =>
+          TKSadd(TokenJAV.mult)
+          "*"
+        case Div =>
+          TKSadd(TokenJAV.div)
+          "/"
+        case Id =>
+          TKSadd(TokenJAV.id(TokenValues.top))
+          TokenValues.pop
+        case Ravno =>
+          TKSadd(TokenJAV.assign)
+          ":="
+        case Dot =>
+          TKSadd(TokenJAV.arr)
+          "<i>"
+        case Mle =>
+          compOperator match {
+            case ">" =>
               TKSadd(TokenJAV.more)
-              ">"
-            }
-            else if (compOperator == "<") {
+              compOperator
+            case "<" =>
               TKSadd(TokenJAV.less)
-              "<"
-            }
-            else {
+              compOperator
+            case _ =>
               TKSadd(TokenJAV.isEq)
               "=="
-            }
-          case S.P =>
-            ""
-          case S.VIVOD =>
-            TKSadd(TokenJAV.out)
-            "<OUT>"
-          case S.VVOD =>
-            TKSadd(TokenJAV.in)
-            "<IN>"
-          case s =>
-            s.toString
-        }
-      }
-
-      private def P1() {
-        LBLshop.push(count)
-        addToRPN("pystP1")
-        addToRPN("<jf>")
-        TKSadd(TokenJAV.incompleteLbl)
-        TKSadd(TokenJAV.jumpFalse)
-      }
-
-      private def P2() {
-        val m: String = "<m" + (count + 2) + ">"
-        tokenString.update(LBLshop.top, TokenJAV.lbl(count + 2))
-        string.update(LBLshop.pop, m)
-        LBLshop.push(count)
-        addToRPN("pystP2")
-        addToRPN("<j>")
-        TKSadd(TokenJAV.incompleteLbl)
-        TKSadd(TokenJAV.jump)
-      }
-
-      private def P3() {
-        val m: String = "<m" + count + ">"
-        string.update(LBLshop.top, m)
-        tokenString.update(LBLshop.pop, TokenJAV.lbl(count))
-      }
-
-      private def P4() {
-        LBLshop.push(count)
-      }
-
-      private def P5() {
-        val m: String = "<m" + (count + 2) + ">"
-        string.update(LBLshop.top, m)
-        tokenString.update(LBLshop.pop, TokenJAV.lbl(count + 2))
-        addToRPN("<m" + LBLshop.top + ">")
-        addToRPN("<j>")
-        TKSadd(TokenJAV.lbl(LBLshop.pop))
-        TKSadd(TokenJAV.jump)
+          }
+        case P =>
+          ""
+        case Vivod =>
+          TKSadd(TokenJAV.out)
+          "<OUT>"
+        case Vvod =>
+          TKSadd(TokenJAV.in)
+          "<IN>"
+        case _: Special => ""
+        case s =>
+          toString
       }
 
       private def addToRPN(s: String) {
@@ -208,57 +165,69 @@ trait ParserComponent {
         tokenString.append(token)
       }
 
-      def goOut() {
-        val symbol: Int = shop.pop
-        if (symbol != S.N) {
-          symbol match {
-            case S.P1 =>
-              P1()
-            case S.P2 =>
-              P2()
-            case S.P3 =>
-              P3()
-            case S.P4 =>
-              P4()
-            case S.P5 =>
-              P5()
-            case S.Pvar =>
-              varMap.put(if (TokenValues.isEmpty) "MissedID&N"
-              else TokenValues.pop, 0)
-            case S.Pconst =>
-              constMap.put(if (TokenValues.isEmpty) "MissedID&N"
-              else TokenValues.pop, 0)
-            case S.Pmas =>
-              masMap.put(if (TokenValues.isEmpty) "MissedID&N" else TokenValues.pop, mutable.Seq())
-            case S.MORE =>
-              compOperator = ">"
-            case S.LESS =>
-              compOperator = "<"
-            case S.COMP =>
-              compOperator = "=="
-            case _ =>
-              addToRPN(getStrFromInt(symbol))
-          }
-        }
+      def goOut() = shop.pop match {
+        case N =>
+        case P1 =>
+          LBLshop.push(count)
+          addToRPN("pystP1")
+          addToRPN("<jf>")
+          TKSadd(TokenJAV.incompleteLbl)
+          TKSadd(TokenJAV.jumpFalse)
+
+        case P2 =>
+          val m: String = "<m" + (count + 2) + ">"
+          tokenString.update(LBLshop.top, TokenJAV.lbl(count + 2))
+          string.update(LBLshop.pop, m)
+          LBLshop.push(count)
+          addToRPN("pystP2")
+          addToRPN("<j>")
+          TKSadd(TokenJAV.incompleteLbl)
+          TKSadd(TokenJAV.jump)
+
+        case P3 =>
+          val m: String = "<m" + count + ">"
+          string.update(LBLshop.top, m)
+          tokenString.update(LBLshop.pop, TokenJAV.lbl(count))
+
+        case P4 => LBLshop.push(count)
+
+        case P5 =>
+          val m: String = "<m" + (count + 2) + ">"
+          string.update(LBLshop.top, m)
+          tokenString.update(LBLshop.pop, TokenJAV.lbl(count + 2))
+          addToRPN("<m" + LBLshop.top + ">")
+          addToRPN("<j>")
+          TKSadd(TokenJAV.lbl(LBLshop.pop))
+          TKSadd(TokenJAV.jump)
+
+        case Pvar =>
+          varMap.put(if (TokenValues.isEmpty) "MissedID&N"
+          else TokenValues.pop, 0)
+
+        case Pconst =>
+          constMap.put(if (TokenValues.isEmpty) "MissedID&N"
+          else TokenValues.pop, 0)
+
+        case Pmas => masMap.put(if (TokenValues.isEmpty) "MissedID&N" else TokenValues.pop, mutable.Seq())
+        case More => compOperator = ">"
+        case Less => compOperator = "<"
+        case Comp => compOperator = "=="
+        case s => addToRPN(getStrFromS(s))
       }
 
-      def push(symbol: Int) {
-        shop.push(symbol)
-      }
+      def push(symbol: Symbol) = shop.push(symbol)
 
-      def pushValue(s: String) {
-        TokenValues.push(s)
-      }
+      def pushAll(symbols: Seq[Symbol]) = shop.pushAll(symbols)
+
+      def pushValue(s: String) = TokenValues.push(s)
 
       def getStr: String = {
         if (workIsDone) while (shop.nonEmpty) {
-          addToRPN(getStrFromInt(shop.pop))
+          addToRPN(getStrFromS(shop.pop))
         }
         string = string.filter(_ != "")
         string.mkString(" ")
       }
     }
-
   }
-
 }
